@@ -843,10 +843,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
 	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_SRC_COLOR;*/
 
-	// スクリーン合成
-	blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
-	blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
-	blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
+	//// スクリーン合成
+	//blendDesc.RenderTarget[0].SrcBlend = D3D12_BLEND_INV_DEST_COLOR;
+	//blendDesc.RenderTarget[0].BlendOp = D3D12_BLEND_OP_ADD;
+	//blendDesc.RenderTarget[0].DestBlend = D3D12_BLEND_ONE;
 
 
 	//すべての色要素を書き込む
@@ -1036,7 +1036,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	//}
 
 	// モデルを読み込み
-	ModelData modelData = LoadObjFile("resources/06_02", "axis.obj");
+	ModelData modelData = LoadObjFile("resources/06_02", "fence.obj");
 
 	// 頂点リソースを作成
 	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource = CreateBufferResource(device.Get(), sizeof(VertexData) * modelData.vertices.size());
@@ -1163,7 +1163,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	D3D12_GPU_DESCRIPTOR_HANDLE textureSrvHandleGPU = GetGPUDescriptorHandle(srvDescriptorHeap.Get(), descriptorSizeSRV, 2);
 
 	//Textureを読んで転送する
-	DirectX::ScratchImage mipImages2 = LoadTexture("resources/uvChecker.png");
+	DirectX::ScratchImage mipImages2 = LoadTexture("resources/fence.png");
 	const DirectX::TexMetadata metadata2 = mipImages2.GetMetadata();
 	Microsoft::WRL::ComPtr<ID3D12Resource> textureResource2 = CreateTextureResource(device.Get(), metadata2);
 	UploadTextureData(textureResource2.Get(), mipImages2);
@@ -1247,7 +1247,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 
 	directionalLightData->color = { 1.0f, 1.0f, 1.0f, 1.0f };
 	directionalLightData->direction = { 0.0f, -1.0f, 0.0f };
-	directionalLightData->intensity = 1.0f;
+	directionalLightData->intensity = 4.0f;
 
 	//ImGuiの初期化
 	IMGUI_CHECKVERSION();

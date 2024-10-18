@@ -1,4 +1,4 @@
-#include "object3d.hlsli"
+#include "Particle.hlsli"
 
 struct Material
 {
@@ -30,12 +30,6 @@ PixcelShaderOutput main(VertexShaderOutput input)
     
     float4 transformedUV = mul(float32_t4(input.texcoord, 0.0f, 1.0f), gMaterial.uvTransform);
     float32_t4 textureColor = gTexture.Sample(gSampler, transformedUV.xy);
-    output.color = gMaterial.color * textureColor;
-    
-    if (output.color.a == 0.0)
-    {
-        discard;
-    }
     
     if (gMaterial.enableLightng != 0)//Litingする場合
     {

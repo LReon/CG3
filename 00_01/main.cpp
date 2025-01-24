@@ -86,6 +86,17 @@ struct ModelData {
 	MaterialData material;
 };
 
+Vector3 changeVec3(Vector4 a)
+{
+	Vector3 result;
+	result.x = a.x;
+	result.y = a.y;
+	result.z = a.z;
+
+	return result;
+}
+
+
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 {
 	if (ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam))
@@ -876,156 +887,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 		IID_PPV_ARGS(&graphicsPipelineState));
 	assert(SUCCEEDED(hr));
 
-	//int vertexCount = 1536;
+	int vertexCount = 1536;
 
-	//ID3D12Resource* vertexResource = CreateBufferResource(device, sizeof(VertexData) * vertexCount);
-	//ID3D12Resource* indexResource = CreateBufferResource(device, sizeof(uint32_t) * vertexCount);
-
-	////マテリアル用のリソースを作る。今回はColor1つ分のサイズを用意する
-	//ID3D12Resource* materialResource = CreateBufferResource(device, sizeof(Material));
-	////マテリアルにデータを書き込む
-	//Material* materialDate = nullptr;
-	////書き込むためのアドレスを取得
-	//materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialDate));
-	////今回は赤を書き込んでみる
-	//materialDate->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
-	//materialDate->enableLighting = true;
-
-	////頂点バッファビューを作成する
-	//D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
-	////リソースの先頭のアドレスから使う
-	//vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
-	////使用するリソースサイズは頂点3つ分のサイズ
-	//vertexBufferView.SizeInBytes = sizeof(VertexData) * vertexCount;
-	////1頂点当たりのサイズ
-	//vertexBufferView.StrideInBytes = sizeof(VertexData);
-	//
-	////頂点バッファビューを作成する
-	//D3D12_VERTEX_BUFFER_VIEW indexBufferView{};
-	////リソースの先頭のアドレスから使う
-	//indexBufferView.BufferLocation = indexResource->GetGPUVirtualAddress();
-	////使用するリソースサイズは頂点3つ分のサイズ
-	//indexBufferView.SizeInBytes = sizeof(uint32_t) * vertexCount;
-	////1頂点当たりのサイズ
-	//indexBufferView.StrideInBytes = DXGI_FORMAT_R32_UINT;
-
-	////頂点リソースにデータを書き込む
-	//VertexData* vertexData = nullptr;
-	////書き込むためのアドレスを取得
-	//vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
-	//
-	////頂点リソースにデータを書き込む
-	//uint32_t* indexData = nullptr;
-	////書き込むためのアドレスを取得
-	//indexResource->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
-
-	//// 緯度方向の分割数
-	//const int kSubdivision = 16;
-	//// 経度分割1つ分の角度
-	//const float kPhaiEvery = float(M_PI) * 2.0f / float(kSubdivision);
-	//// 緯度分割1つ分の角度
-	//const float kShitaEvery = float(M_PI) / float(kSubdivision);
-	//// 緯度の方向に分割
-	//for (int latIndex = 0; latIndex < kSubdivision; ++latIndex) {
-	//	float shita = float( - M_PI) / 2.0f + kShitaEvery * latIndex;//θ
-
-	//	// 経度の方向に分割しながら線を描く
-	//	for (int lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
-	//		uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
-	//		float phai = lonIndex * kPhaiEvery;//φ
-
-	//		/*float u = float(lonIndex / kSubdivision);
-	//		float v = 1.0f - float(latIndex / kSubdivision);*/
-
-	//		float u = float(lonIndex) / float(kSubdivision);
-	//		float v = 1.0f - float(latIndex) / float(kSubdivision);
-
-	//		VertexData vLB = {
-	//			{
-	//				cos(shita) * cos(phai),
-	//				sin(shita),
-	//				cos(shita) * sin(phai),
-	//				1.0f				
-	//			},
-	//			{
-	//				u,
-	//				v
-	//			}
-	//		};
-	//		vLB.normal = changeVec3(vLB.position);
-
-	//		VertexData vLT = {
-	//			{
-	//				cos(shita + kShitaEvery) * cos(phai),
-	//				sin(shita + kShitaEvery),
-	//				cos(shita + kShitaEvery) * sin(phai),
-	//				1.0f				
-	//			},
-	//			{
-	//				u,
-	//				v - 1.0f / float(kSubdivision)
-	//			}
-	//		};
-	//		vLT.normal = changeVec3(vLT.position);
-
-	//		VertexData vRB = {
-	//			{
-	//				cos(shita) * cos(phai + kPhaiEvery),
-	//				sin(shita),
-	//				cos(shita) * sin(phai + kPhaiEvery),
-	//				1.0f
-	//			},
-	//			{
-	//				u + 1.0f / float(kSubdivision) ,
-	//				v
-	//			}
-	//		};
-	//		vRB.normal = changeVec3(vRB.position);
-
-	//		VertexData vRT = {
-	//			{
-	//				cos(shita + kShitaEvery) * cos(phai + kPhaiEvery),
-	//				sin(shita + kShitaEvery),
-	//				cos(shita + kShitaEvery) * sin(phai + kPhaiEvery),
-	//				1.0f				
-	//			},
-	//			{
-	//				u + 1.0f / float(kSubdivision),
-	//				v - 1.0f / float(kSubdivision)
-	//			}
-	//		};
-	//		vRT.normal = changeVec3(vRT.position);
-
-	//		// 原点aにデータを入力する
-	//		vertexData[start] = vRT;
-
-	//		// b の頂点データを計算
-	//		vertexData[start + 1] = vRB;
-	//		vertexData[start + 3] = vRB;
-
-	//		// c の頂点データを計算
-	//		vertexData[start + 2] = vLT;
-	//		vertexData[start + 4] = vLT;
-
-	//		// d の頂点データを計算
-	//		vertexData[start + 5] = vLB;
-
-	//		indexData[0] = start + 0; indexData[1] = start + 1; indexData[2] = start + 2;
-	//		indexData[3] = start + 1; indexData[4] = start + 2; indexData[5] = start + 5;
-	//	}
-	//}
-
-	// モデルを読み込み
-	ModelData modelData = LoadObjFile("resources/06_02", "axis.obj");
-
-	// 頂点リソースを作成
-	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource = CreateBufferResource(device.Get(), sizeof(VertexData) * modelData.vertices.size());
-
-	// 頂点バッファビューを作成する
-	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
-	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress(); // リソースの仮想のアドレスから使う
-	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size()); // 使用するリソースのサイズは頂点のサイズ
-	vertexBufferView.StrideInBytes = sizeof(VertexData); // 頂点あたりのサイズ
+	Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource = CreateBufferResource(device.Get(), sizeof(VertexData) * vertexCount);
+	Microsoft::WRL::ComPtr<ID3D12Resource> indexResource = CreateBufferResource(device.Get(), sizeof(uint32_t) * vertexCount);
 
 	//マテリアル用のリソースを作る。今回はColor1つ分のサイズを用意する
 	Microsoft::WRL::ComPtr<ID3D12Resource> materialResource = CreateBufferResource(device.Get(), sizeof(Material));
@@ -1037,8 +902,154 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	materialDate->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
 	materialDate->enableLighting = true;
 
-	// 頂点リソースにデータを書き込む
+	//頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	//リソースの先頭のアドレスから使う
+	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress();
+	//使用するリソースサイズは頂点3つ分のサイズ
+	vertexBufferView.SizeInBytes = sizeof(VertexData) * vertexCount;
+	//1頂点当たりのサイズ
+	vertexBufferView.StrideInBytes = sizeof(VertexData);
+	
+	//頂点バッファビューを作成する
+	D3D12_VERTEX_BUFFER_VIEW indexBufferView{};
+	//リソースの先頭のアドレスから使う
+	indexBufferView.BufferLocation = indexResource->GetGPUVirtualAddress();
+	//使用するリソースサイズは頂点3つ分のサイズ
+	indexBufferView.SizeInBytes = sizeof(uint32_t) * vertexCount;
+	//1頂点当たりのサイズ
+	indexBufferView.StrideInBytes = DXGI_FORMAT_R32_UINT;
+
+	//頂点リソースにデータを書き込む
 	VertexData* vertexData = nullptr;
+	//書き込むためのアドレスを取得
+	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData));
+	
+	//頂点リソースにデータを書き込む
+	uint32_t* indexData = nullptr;
+	//書き込むためのアドレスを取得
+	indexResource->Map(0, nullptr, reinterpret_cast<void**>(&indexData));
+
+	// 緯度方向の分割数
+	const int kSubdivision = 16;
+	// 経度分割1つ分の角度
+	const float kPhaiEvery = float(M_PI) * 2.0f / float(kSubdivision);
+	// 緯度分割1つ分の角度
+	const float kShitaEvery = float(M_PI) / float(kSubdivision);
+	// 緯度の方向に分割
+	for (int latIndex = 0; latIndex < kSubdivision; ++latIndex) {
+		float shita = float( - M_PI) / 2.0f + kShitaEvery * latIndex;//θ
+
+		// 経度の方向に分割しながら線を描く
+		for (int lonIndex = 0; lonIndex < kSubdivision; ++lonIndex) {
+			uint32_t start = (latIndex * kSubdivision + lonIndex) * 6;
+			float phai = lonIndex * kPhaiEvery;//φ
+
+			/*float u = float(lonIndex / kSubdivision);
+			float v = 1.0f - float(latIndex / kSubdivision);*/
+
+			float u = float(lonIndex) / float(kSubdivision);
+			float v = 1.0f - float(latIndex) / float(kSubdivision);
+
+			VertexData vLB = {
+				{
+					cos(shita) * cos(phai),
+					sin(shita),
+					cos(shita) * sin(phai),
+					1.0f				
+				},
+				{
+					u,
+					v
+				}
+			};
+			vLB.normal = changeVec3(vLB.position);
+
+			VertexData vLT = {
+				{
+					cos(shita + kShitaEvery) * cos(phai),
+					sin(shita + kShitaEvery),
+					cos(shita + kShitaEvery) * sin(phai),
+					1.0f				
+				},
+				{
+					u,
+					v - 1.0f / float(kSubdivision)
+				}
+			};
+			vLT.normal = changeVec3(vLT.position);
+
+			VertexData vRB = {
+				{
+					cos(shita) * cos(phai + kPhaiEvery),
+					sin(shita),
+					cos(shita) * sin(phai + kPhaiEvery),
+					1.0f
+				},
+				{
+					u + 1.0f / float(kSubdivision) ,
+					v
+				}
+			};
+			vRB.normal = changeVec3(vRB.position);
+
+			VertexData vRT = {
+				{
+					cos(shita + kShitaEvery) * cos(phai + kPhaiEvery),
+					sin(shita + kShitaEvery),
+					cos(shita + kShitaEvery) * sin(phai + kPhaiEvery),
+					1.0f				
+				},
+				{
+					u + 1.0f / float(kSubdivision),
+					v - 1.0f / float(kSubdivision)
+				}
+			};
+			vRT.normal = changeVec3(vRT.position);
+
+			// 原点aにデータを入力する
+			vertexData[start] = vRT;
+
+			// b の頂点データを計算
+			vertexData[start + 1] = vRB;
+			vertexData[start + 3] = vRB;
+
+			// c の頂点データを計算
+			vertexData[start + 2] = vLT;
+			vertexData[start + 4] = vLT;
+
+			// d の頂点データを計算
+			vertexData[start + 5] = vLB;
+
+			indexData[0] = start + 0; indexData[1] = start + 1; indexData[2] = start + 2;
+			indexData[3] = start + 1; indexData[4] = start + 2; indexData[5] = start + 5;
+		}
+	}
+
+	// モデルを読み込み
+	ModelData modelData = LoadObjFile("resources/06_02", "axis.obj");
+
+	// 頂点リソースを作成
+	//Microsoft::WRL::ComPtr<ID3D12Resource> vertexResource = CreateBufferResource(device.Get(), sizeof(VertexData) * modelData.vertices.size());
+
+	// 頂点バッファビューを作成する
+	//D3D12_VERTEX_BUFFER_VIEW vertexBufferView{};
+	vertexBufferView.BufferLocation = vertexResource->GetGPUVirtualAddress(); // リソースの仮想のアドレスから使う
+	vertexBufferView.SizeInBytes = UINT(sizeof(VertexData) * modelData.vertices.size()); // 使用するリソースのサイズは頂点のサイズ
+	vertexBufferView.StrideInBytes = sizeof(VertexData); // 頂点あたりのサイズ
+
+	//マテリアル用のリソースを作る。今回はColor1つ分のサイズを用意する
+	//Microsoft::WRL::ComPtr<ID3D12Resource> materialResource = CreateBufferResource(device.Get(), sizeof(Material));
+	//マテリアルにデータを書き込む
+	//Material* materialDate = nullptr;
+	//書き込むためのアドレスを取得
+	materialResource->Map(0, nullptr, reinterpret_cast<void**>(&materialDate));
+	//今回は赤を書き込んでみる
+	materialDate->color = Vector4(1.0f, 1.0f, 1.0f, 1.0f);
+	materialDate->enableLighting = true;
+
+	// 頂点リソースにデータを書き込む
+	//VertexData* vertexData = nullptr;
 	vertexResource->Map(0, nullptr, reinterpret_cast<void**>(&vertexData)); // 書き込むためのアドレスを取得
 	std::memcpy(vertexData, modelData.vertices.data(), sizeof(VertexData) * modelData.vertices.size()); // 頂点データをリソースにコピー
 	vertexResource->Unmap(0, nullptr);
